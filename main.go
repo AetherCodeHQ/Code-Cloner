@@ -1,26 +1,29 @@
+
 package main
 
 import (
 	"fmt"
 	"os"
+	"path/filepath"
+	"strings"
 )
 
-// code_cloner - Clone code patterns
-func code_cloner(path string) {
-	fmt.Println("========================================")
-	fmt.Println("  Code-Cloner")
-	fmt.Println("  Clone code patterns")
-	fmt.Println("========================================")
-	fmt.Println()
-	fmt.Println("Target:", path)
-	fmt.Println("Processing...")
-	fmt.Println("Done!")
-}
-
 func main() {
-	path := "."
+	dir := "."
 	if len(os.Args) > 1 {
-		path = os.Args[1]
+		dir = os.Args[1]
 	}
-	code_cloner(path)
+	var n int
+	filepath.Walk(dir, func(p string, info os.FileInfo, err error) error {
+		if err != nil || info.IsDir() {
+			return nil
+		}
+		if strings.HasPrefix(info.Name(), ".") {
+			return nil
+		}
+		n++
+		fmt.Println(p)
+		return nil
+	})
+	fmt.Printf("%d file(s)\n", n)
 }
